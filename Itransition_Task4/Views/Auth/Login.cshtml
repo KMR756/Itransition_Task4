@@ -2,34 +2,19 @@
     ViewData["Title"] = "Login";
 }
 
-<!-- Main container: Uses Flex/Grid to handle the two panels -->
-<div class=" bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 flex items-center justify-center p-4 md:p-8">
+<!-- Main container-->
+<div  class="flex-grow flex items-center justify-center p-4 md:p-8">
 
-    <!-- 
-      Wrapper Card: 
-      - Sets a maximum width for the whole component (`max-w-7xl`).
-      - Sets a minimum height so the image looks good.
-      - On desktop (md:), uses `grid-cols-2` for side-by-side layout.
-      - Uses `overflow-hidden` so the image respects the border-radius.
-    -->
+   
+    
     <div class="w-full max-w-7xl min-h-[600px] bg-white/10 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
 
-        <!-- =========================================
-             LEFT PANEL: The Login Form
-             ========================================= -->
-        <!-- 
-          We move the centering logic inside this panel. 
-          `p-8 md:p-12 lg:p-16` provides breathing room as screen size grows.
-        -->
+        
         <div class="flex flex-col justify-center p-8 md:p-12 lg:p-16">
 
-            <!-- Logo / Brand (Keep original structure, just slight margin tweaks) -->
+         
             <div class="text-center mb-10 md:text-left md:mb-12">
-                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-600 shadow-lg shadow-indigo-600/30 mb-4 md:ml-0">
-                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-7a2 2 0 00-2-2H6a2 2 0 00-2 2v7a2 2 0 002 2zm10-11V7a4 4 0 00-8 0v3h8z" />
-                    </svg>
-                </div>
+               
 
                 <h1 class="text-3xl md:text-4xl font-bold text-white">
                     Welcome back
@@ -41,10 +26,10 @@
             </div>
 
 
-            <!-- The actual form content (Classes kept original) -->
+            <!-- The actual form content  -->
             <form asp-controller="Account" asp-action="Login" method="post" class="space-y-6">
 
-                <!-- Email -->
+                
                 <div>
                     <label for="email" class="block text-sm font-medium text-slate-200 mb-2">Email address</label>
                     <div class="relative">
@@ -57,7 +42,7 @@
                     </div>
                 </div>
 
-                <!-- Password -->
+               
                 <div>
                     <div class="flex items-center justify-between mb-2">
                         <label for="password" class="block text-sm font-medium text-slate-200">Password</label>
@@ -73,62 +58,52 @@
                     </div>
                 </div>
 
-                <!-- Remember Me -->
+               
                 <div class="flex items-center">
                     <input type="checkbox" id="rememberMe" name="RememberMe" class="w-4 h-4 rounded border-slate-600 bg-slate-800 text-indigo-600 focus:ring-indigo-500" />
                     <label for="rememberMe" class="ml-2 text-sm text-slate-400">Remember me</label>
                 </div>
 
-                <!-- Submit -->
+               
                 <button type="submit" class="w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/20 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-900">
                     Sign in
                 </button>
             </form>
 
-            <!-- Divider (Classes kept original) -->
+           
             <div class="flex items-center gap-4 my-8">
                 <div class="flex-1 h-px bg-slate-700"></div>
                 <span class="text-sm text-slate-500">OR</span>
                 <div class="flex-1 h-px bg-slate-700"></div>
             </div>
 
-            <!-- Register (Classes kept original) -->
+          
             <div class="text-center md:text-left">
                 <p class="text-sm text-slate-400">
                     Don't have an account?
-                    <a asp-controller="Account" asp-action="Register" class="font-semibold text-indigo-400 hover:text-indigo-300 transition">
+                    <a  asp-action="Register" class="font-semibold text-indigo-400 hover:text-indigo-300 transition">
                         Create an account
                     </a>
                 </p>
             </div>
 
-            <!-- Footer (Moved inside the form panel) -->
-            <p class="text-center md:text-left text-xs text-slate-500 mt-12 md:mt-auto pt-6">
-                © @DateTime.Now.Year MyApp. All rights reserved.
-            </p>
+           
+           
 
-        </div> <!-- End Left Panel -->
+        </div> 
 
 
 
         <div class="hidden md:block relative group">
 
-            <!-- The Image itself -->
-            <!-- 
-              Using an image related to infrastructure, security, or data 
-              complements a login screen. This one is a stylized modern server room.
-            -->
+           
             <img src="~/images/login.svg" 
                  alt="Secure Data Center Infrastructure"
-                 class="absolute mt-10 inset-0 w-fit h-fit object-cover transition-transform duration-500 group-hover:scale-105" />
+                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
 
-            @* <!-- Optional: A subtle gradient overlay on the image to improve theme blending -->
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
-            
-            <!-- Optional: Decorative subtle glow border between the panels -->
-            <div class="absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-indigo-500/20 to-transparent"></div> *@
+          
         </div>
 
-    </div> <!-- End Wrapper Card -->
+    </div> 
 
 </div>

@@ -8,5 +8,9 @@ namespace Itransition_Task4.Controllers
         {
             return View();
         }
+        public IActionResult Register()
+        {
+            return View();
+        }
     }
 }
