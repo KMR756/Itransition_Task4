@@ -2,6 +2,11 @@
     ViewData["Title"] = "Login";
 }
 
+@using Itransition_Task4.Dto
+@model UserDto
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!-- Success Toast Notification -->
 @if (ViewBag.SuccessMessage != null)
 {
     <div id="toast-success" class="fixed top-5 right-5 z-50 flex items-center w-full max-w-md p-4 text-slate-200 bg-slate-900/90 backdrop-blur-xl border border-emerald-500/30 rounded-2xl shadow-2xl shadow-emerald-950/40 space-x-3 transition-all duration-300">
@@ -40,20 +45,48 @@
         }
     </script>
 }
-<!-- Main container-->
-<div  class="flex-grow flex items-center justify-center p-4 md:p-8">
 
-   
-    
+@if (ViewBag.ErrorMessage != null)
+{
+    <div id="toast-danger" class="fixed top-5 right-5 z-50 flex items-center w-full max-w-md p-4 text-slate-200 bg-slate-900/90 backdrop-blur-xl border border-rose-500/30 rounded-2xl shadow-2xl shadow-rose-950/40 space-x-3 transition-all duration-300 animate-bounce-once">
+        <div class="inline-flex items-center justify-center flex-shrink-0 w-9 h-9 text-rose-400 bg-rose-500/10 rounded-xl">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+        </div>
+        <div class="text-sm font-medium flex-grow">
+            @ViewBag.ErrorMessage
+        </div>
+        <button type="button" onclick="dismissToast()" class="inline-flex items-center justify-center w-8 h-8 text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        // Auto-dismiss the toast after 5 seconds with a smooth fade-out
+        setTimeout(() => {
+            dismissToast();
+        }, 5000);
+
+        function dismissToast() {
+            const toast = document.getElementById('toast-danger');
+            if (toast) {
+                toast.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => toast.remove(), 300);
+            }
+        }
+    </script>
+}
+<!-- Main container -->
+<div class="flex-grow flex items-center justify-center p-4 md:p-8">
     <div class="w-full max-w-7xl min-h-[600px] bg-white/10 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
 
-        
+        <!-- Left Form Panel -->
         <div class="flex flex-col justify-center p-8 md:p-12 lg:p-16">
 
-         
             <div class="text-center mb-10 md:text-left md:mb-12">
-               
-
                 <h1 class="text-3xl md:text-4xl font-bold text-white">
                     Welcome back
                 </h1>
@@ -63,27 +96,32 @@
                 </p>
             </div>
 
+            <!-- Login Form -->
+            <form asp-controller="Auth" asp-action="LoginUser" method="post" class="space-y-6">
 
-            <!-- The actual form content  -->
-            <form  asp-action="Login" method="post" class="space-y-6">
-
-                
+                <!-- Email Input (Mapped to Model.Email) -->
                 <div>
-                    <label for="email" class="block text-sm font-medium text-slate-200 mb-2">Email address</label>
+                    <label asp-for="Email" class="block text-sm font-medium text-slate-200 mb-2">Email address</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                             <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
                         </div>
-                        <input type="email" id="email" name="Email" placeholder="you@example.com" required autocomplete="email" class="w-full pl-12 pr-4 py-3.5 bg-slate-900/60 border border-slate-700 rounded-xl text-white placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20" />
+                        <input asp-for="Email"
+                               type="email"
+                               placeholder="you@example.com"
+                               required
+                               autocomplete="email"
+                               class="w-full pl-12 pr-4 py-3.5 bg-slate-900/60 border border-slate-700 rounded-xl text-white placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20" />
                     </div>
+                    <span asp-validation-for="Email" class="text-rose-400 text-xs mt-1 block"></span>
                 </div>
 
-               
+                <!-- Password Input (Mapped to Model.PasswordHash) -->
                 <div>
                     <div class="flex items-center justify-between mb-2">
-                        <label for="password" class="block text-sm font-medium text-slate-200">Password</label>
+                        <label asp-for="PasswordHash" class="block text-sm font-medium text-slate-200">Password</label>
                         <a href="#" class="text-sm text-indigo-400 hover:text-indigo-300 transition">Forgot password?</a>
                     </div>
                     <div class="relative">
@@ -92,56 +130,51 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-7a2 2 0 00-2-2H6a2 2 0 00-2 2v7a2 2 0 002 2zm10-11V7a4 4 0 00-8 0v3h8z" />
                             </svg>
                         </div>
-                        <input type="password" id="password" name="Password" placeholder="••••••••" required autocomplete="current-password" class="w-full pl-12 pr-4 py-3.5 bg-slate-900/60 border border-slate-700 rounded-xl text-white placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20" />
+                        <input asp-for="PasswordHash"
+                               type="password"
+                               placeholder="••••••••"
+                               required
+                               autocomplete="current-password"
+                               class="w-full pl-12 pr-4 py-3.5 bg-slate-900/60 border border-slate-700 rounded-xl text-white placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20" />
                     </div>
+                    <span asp-validation-for="PasswordHash" class="text-rose-400 text-xs mt-1 block"></span>
                 </div>
 
-               
+                <!-- Remember Me Checkbox -->
                 <div class="flex items-center">
                     <input type="checkbox" id="rememberMe" name="RememberMe" class="w-4 h-4 rounded border-slate-600 bg-slate-800 text-indigo-600 focus:ring-indigo-500" />
                     <label for="rememberMe" class="ml-2 text-sm text-slate-400">Remember me</label>
                 </div>
 
-               
+                <!-- Submit Button -->
                 <button type="submit" class="w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/20 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-900">
                     Sign in
                 </button>
             </form>
 
-           
             <div class="flex items-center gap-4 my-8">
                 <div class="flex-1 h-px bg-slate-700"></div>
                 <span class="text-sm text-slate-500">OR</span>
                 <div class="flex-1 h-px bg-slate-700"></div>
             </div>
 
-          
             <div class="text-center md:text-left">
                 <p class="text-sm text-slate-400">
                     Don't have an account?
-                    <a  asp-action="Register" class="font-semibold text-indigo-400 hover:text-indigo-300 transition">
+                    <a asp-controller="Auth" asp-action="Register" class="font-semibold text-indigo-400 hover:text-indigo-300 transition">
                         Create an account
                     </a>
                 </p>
             </div>
 
-           
-           
-
         </div> 
 
-
-
+        <!-- Right Side Panel -->
         <div class="hidden md:block relative group">
-
-           
             <img src="~/images/login.svg" 
                  alt="Secure Data Center Infrastructure"
                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-
-          
         </div>
 
     </div> 
-
 </div>

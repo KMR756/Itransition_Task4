@@ -43,5 +43,28 @@ namespace Itransition_Task4.Controllers
 
             return RedirectToAction("Login");
         }
+
+        public async Task<IActionResult> LoginUser(UserDto dto)
+        {
+            var isUserExisit = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email);
+            if(isUserExisit == null)
+            {
+                ViewBag.ErrorMessage = "User with this email does not Exits.";
+                return View("Login");
+            }
+            else
+            {
+                if(isUserExisit.PasswordHash == dto.PasswordHash)
+                {
+
+                    return RedirectToAction("Index","Dashboard");
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Incorrect Password";
+                    return View("Login");
+                }
+            }
+        }
     }
 }
