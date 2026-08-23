@@ -1,14 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Itransition_Task4.Models
+﻿namespace Itransition_Task4.Dto
 {
-    public class User
+    public class UserDto
     {
-        [Key]
         public int Id { get; set; }
         public string FullName { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string PasswordHash { get; set; } = null!;
     }
-
 }

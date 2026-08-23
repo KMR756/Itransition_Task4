@@ -2,6 +2,44 @@
     ViewData["Title"] = "Login";
 }
 
+@if (ViewBag.SuccessMessage != null)
+{
+    <div id="toast-success" class="fixed top-5 right-5 z-50 flex items-center w-full max-w-md p-4 text-slate-200 bg-slate-900/90 backdrop-blur-xl border border-emerald-500/30 rounded-2xl shadow-2xl shadow-emerald-950/40 space-x-3 transition-all duration-300">
+        <!-- Emerald Checkmark Icon -->
+        <div class="inline-flex items-center justify-center flex-shrink-0 w-9 h-9 text-emerald-400 bg-emerald-500/10 rounded-xl">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+        </div>
+
+        <!-- Success Message -->
+        <div class="text-sm font-medium flex-grow">
+            @ViewBag.SuccessMessage
+        </div>
+
+        <!-- Close Button -->
+        <button type="button" onclick="dismissSuccessToast()" class="inline-flex items-center justify-center w-8 h-8 text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        // Auto-dismiss the success toast after 5 seconds
+        setTimeout(() => {
+            dismissSuccessToast();
+        }, 5000);
+
+        function dismissSuccessToast() {
+            const toast = document.getElementById('toast-success');
+            if (toast) {
+                toast.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => toast.remove(), 300);
+            }
+        }
+    </script>
+}
 <!-- Main container-->
 <div  class="flex-grow flex items-center justify-center p-4 md:p-8">
 
@@ -27,7 +65,7 @@
 
 
             <!-- The actual form content  -->
-            <form asp-controller="Account" asp-action="Login" method="post" class="space-y-6">
+            <form  asp-action="Login" method="post" class="space-y-6">
 
                 
                 <div>
