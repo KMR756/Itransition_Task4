@@ -1,0 +1,17 @@
+{
+  "name": "itransition_task4",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx @tailwindcss/cli -i ./Styles/input.css -o ./wwwroot/css/site.css --watch",
+    "build": "npx @tailwindcss/cli -i ./Styles/input.css -o ./wwwroot/css/site.css --minify"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}
