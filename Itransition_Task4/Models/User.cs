@@ -10,5 +10,4 @@ namespace Itransition_Task4.Models
         public string Email { get; set; } = null!;
         public string PasswordHash { get; set; } = null!;
     }
-
 }

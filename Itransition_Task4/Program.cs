@@ -1,10 +1,15 @@
 using Itransition_Task4.Data;
+using Itransition_Task4.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
