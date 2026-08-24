@@ -79,11 +79,11 @@
         }
     </script>
 }
-<!-- Main container -->
+
 <div class="flex-grow flex items-center justify-center p-4 md:p-8">
     <div class="w-full max-w-7xl min-h-[600px] bg-white/10 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
 
-        <!-- Left Form Panel -->
+        
         <div class="flex flex-col justify-center p-8 md:p-12 lg:p-16">
 
             <div class="text-center mb-10 md:text-left md:mb-12">
@@ -96,10 +96,10 @@
                 </p>
             </div>
 
-            <!-- Login Form -->
+         
             <form asp-controller="Auth" asp-action="LoginUser" method="post" class="space-y-6">
 
-                <!-- Email Input (Mapped to Model.Email) -->
+                
                 <div>
                     <label asp-for="Email" class="block text-sm font-medium text-slate-200 mb-2">Email address</label>
                     <div class="relative">
@@ -118,7 +118,7 @@
                     <span asp-validation-for="Email" class="text-rose-400 text-xs mt-1 block"></span>
                 </div>
 
-                <!-- Password Input (Mapped to Model.PasswordHash) -->
+                
                 <div>
                     <div class="flex items-center justify-between mb-2">
                         <label asp-for="PasswordHash" class="block text-sm font-medium text-slate-200">Password</label>
@@ -140,13 +140,13 @@
                     <span asp-validation-for="PasswordHash" class="text-rose-400 text-xs mt-1 block"></span>
                 </div>
 
-                <!-- Remember Me Checkbox -->
+               
                 <div class="flex items-center">
                     <input type="checkbox" id="rememberMe" name="RememberMe" class="w-4 h-4 rounded border-slate-600 bg-slate-800 text-indigo-600 focus:ring-indigo-500" />
                     <label for="rememberMe" class="ml-2 text-sm text-slate-400">Remember me</label>
                 </div>
 
-                <!-- Submit Button -->
+            
                 <button type="submit" class="w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/20 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-900">
                     Sign in
                 </button>
@@ -169,7 +169,7 @@
 
         </div> 
 
-        <!-- Right Side Panel -->
+      
         <div class="hidden md:block relative group">
             <img src="~/images/login.svg" 
                  alt="Secure Data Center Infrastructure"

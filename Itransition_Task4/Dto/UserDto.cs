@@ -13,7 +13,7 @@ namespace Itransition_Task4.Dto
         public string Email { get; set; } = null!;
 
         [Required]
-        [MinLength(6, ErrorMessage = "Password must be at least 6 characters long.")]
+      
         public string PasswordHash { get; set; } = null!;
     }
 }
