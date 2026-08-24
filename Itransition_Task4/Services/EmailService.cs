@@ -1,6 +1,5 @@
 ﻿using MailKit.Security;
 using MimeKit;
-// Use explicit alias to resolve ambiguous SmtpClient reference
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace Itransition_Task4.Services
@@ -12,8 +11,11 @@ namespace Itransition_Task4.Services
             try
             {
                 var host = configuration["Smtp:Host"] ?? configuration["Smtp__Host"] ?? "smtp.gmail.com";
-                var portString = configuration["Smtp:Port"] ?? configuration["Smtp__Port"] ?? "587";
+
+                // FORCE Port 465 for cloud hosting like Render
+                var portString = configuration["Smtp:Port"] ?? configuration["Smtp__Port"] ?? "465";
                 var port = int.Parse(portString);
+
                 var senderEmail = configuration["Smtp:Email"] ?? configuration["Smtp__Email"];
                 var senderPassword = configuration["Smtp:Password"] ?? configuration["Smtp__Password"];
 
@@ -45,7 +47,11 @@ namespace Itransition_Task4.Services
 
                 using var client = new SmtpClient();
 
-                var socketOptions = port == 465
+                // 10 second timeout so background worker threads don't hang
+                client.Timeout = 10000;
+
+                // Force SSL on Connect for port 465
+                var socketOptions = (port == 465)
                     ? SecureSocketOptions.SslOnConnect
                     : SecureSocketOptions.StartTls;
 
