@@ -1,7 +1,7 @@
-﻿using MailKit.Net.Smtp;
-using MailKit.Security;
+﻿using MailKit.Security;
 using MimeKit;
-using System.Net.Mail;
+// Use explicit alias to resolve ambiguous SmtpClient reference
+using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace Itransition_Task4.Services
 {
@@ -11,7 +11,6 @@ namespace Itransition_Task4.Services
         {
             try
             {
-                // Support both Smtp:Host and Smtp__Host syntax
                 var host = configuration["Smtp:Host"] ?? configuration["Smtp__Host"] ?? "smtp.gmail.com";
                 var portString = configuration["Smtp:Port"] ?? configuration["Smtp__Port"] ?? "587";
                 var port = int.Parse(portString);
@@ -20,7 +19,7 @@ namespace Itransition_Task4.Services
 
                 if (string.IsNullOrEmpty(senderEmail) || string.IsNullOrEmpty(senderPassword))
                 {
-                    logger.LogError("[EMAIL FAILURE] SMTP credentials missing in configuration! Sender Email: {Email}", senderEmail);
+                    logger.LogError("[EMAIL FAILURE] SMTP credentials missing in configuration!");
                     return;
                 }
 
@@ -46,12 +45,10 @@ namespace Itransition_Task4.Services
 
                 using var client = new SmtpClient();
 
-                // Select secure socket options based on port
                 var socketOptions = port == 465
                     ? SecureSocketOptions.SslOnConnect
                     : SecureSocketOptions.StartTls;
 
-                // Connect to SMTP Server
                 await client.ConnectAsync(host, port, socketOptions);
                 await client.AuthenticateAsync(senderEmail, senderPassword);
                 await client.SendAsync(message);
