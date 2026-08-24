@@ -1,38 +1,34 @@
-﻿using MailKit.Security;
-using MimeKit;
-using SmtpClient = MailKit.Net.Smtp.SmtpClient;
+﻿
+
+
+using System.Text;
+using System.Text.Json;
 
 namespace Itransition_Task4.Services
 {
     public class EmailService(IConfiguration configuration, ILogger<EmailService> logger) : IEmailService
     {
+        private static readonly HttpClient HttpClient = new();
+
         public async Task SendVerificationEmailAsync(string toEmail, string verifyLink)
         {
             try
             {
-                var host = configuration["Smtp:Host"] ?? configuration["Smtp__Host"] ?? "smtp.gmail.com";
+                var apiKey = configuration["Resend:ApiKey"] ?? configuration["Resend__ApiKey"];
 
-                // FORCE Port 465 for cloud hosting like Render
-                var portString = configuration["Smtp:Port"] ?? configuration["Smtp__Port"] ?? "465";
-                var port = int.Parse(portString);
-
-                var senderEmail = configuration["Smtp:Email"] ?? configuration["Smtp__Email"];
-                var senderPassword = configuration["Smtp:Password"] ?? configuration["Smtp__Password"];
-
-                if (string.IsNullOrEmpty(senderEmail) || string.IsNullOrEmpty(senderPassword))
+                if (string.IsNullOrEmpty(apiKey))
                 {
-                    logger.LogError("[EMAIL FAILURE] SMTP credentials missing in configuration!");
+                    logger.LogError("[EMAIL FAILURE] Resend API Key is missing in Configuration!");
                     return;
                 }
 
-                var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("Task4 App Security", senderEmail));
-                message.To.Add(new MailboxAddress("", toEmail));
-                message.Subject = "Verify Your Account Email";
-
-                var bodyBuilder = new BodyBuilder
+                // Resend free tier without a custom domain requires sending FROM onboarding@resend.dev
+                var payload = new
                 {
-                    HtmlBody = $@"
+                    from = "Task4 Security <onboarding@resend.dev>",
+                    to = new[] { toEmail },
+                    subject = "Verify Your Account Email",
+                    html = $@"
                         <div style='font-family: Arial, sans-serif; padding: 24px; background-color: #0f172a; color: #f8fafc; border-radius: 12px;'>
                             <h2 style='color: #38bdf8; margin-top: 0;'>Email Verification Required</h2>
                             <p style='color: #cbd5e1;'>Thank you for registering! Please click the button below to verify your email address:</p>
@@ -43,24 +39,25 @@ namespace Itransition_Task4.Services
                         </div>"
                 };
 
-                message.Body = bodyBuilder.ToMessageBody();
+                var json = JsonSerializer.Serialize(payload);
+                using var request = new HttpRequestMessage(HttpMethod.Post, "https://api.resend.com/emails")
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                };
 
-                using var client = new SmtpClient();
+                request.Headers.Add("Authorization", $"Bearer {apiKey}");
 
-                // 10 second timeout so background worker threads don't hang
-                client.Timeout = 10000;
+                var response = await HttpClient.SendAsync(request);
 
-                // Force SSL on Connect for port 465
-                var socketOptions = (port == 465)
-                    ? SecureSocketOptions.SslOnConnect
-                    : SecureSocketOptions.StartTls;
-
-                await client.ConnectAsync(host, port, socketOptions);
-                await client.AuthenticateAsync(senderEmail, senderPassword);
-                await client.SendAsync(message);
-                await client.DisconnectAsync(true);
-
-                logger.LogInformation("Verification email sent successfully to {Email}", toEmail);
+                if (response.IsSuccessStatusCode)
+                {
+                    logger.LogInformation("Verification email sent successfully to {Email} via Resend", toEmail);
+                }
+                else
+                {
+                    var errorResponse = await response.Content.ReadAsStringAsync();
+                    logger.LogError("[EMAIL FAILURE] Resend API returned status {Status}: {Error}", response.StatusCode, errorResponse);
+                }
             }
             catch (Exception ex)
             {
